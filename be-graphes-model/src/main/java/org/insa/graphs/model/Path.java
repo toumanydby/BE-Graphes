@@ -2,6 +2,7 @@ package org.insa.graphs.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,13 +30,52 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+
+        // Si il n y a pas de listes de noeuds pour construire le chemin on ne fait rien 
+        if(nodes.size() == 0){
+            return new Path(graph);
+        }
+        // ici si il y a un seul noeud on retourne le chemin avec le seul noeud
+        if ( nodes.size() == 1){
+            return new Path(graph,nodes.get(0));
+        }
+
+        // Listes des arcs pour creer le chemin le plus rapide
+        List<Arc> arcs = new ArrayList<Arc>(); 
+
+        Node originNode;
+        Node destinationNode;
+
+        Iterator<Node> iterOnNodes= nodes.iterator();
+
+        destinationNode = iterOnNodes.next();
+
+        while( iterOnNodes.hasNext()){
+            originNode = destinationNode;
+            destinationNode = iterOnNodes.next();
+
+            List<Arc> successors = originNode.getSuccessors();
+            Arc shortArc = null; // Plus petit arc
+            double minimumTravelTime = Double.MAX_VALUE;
+            for (Arc successor : successors) {
+                if((destinationNode.equals(successor.getDestination()) 
+                    && (successor.getMinimumTravelTime() < minimumTravelTime)
+                    )){
+                        shortArc = successor;
+                        minimumTravelTime = successor.getMinimumTravelTime();
+                    }
+            }
+
+            if(shortArc == null){
+                throw new IllegalArgumentException();
+            } else{
+                arcs.add(shortArc);
+            }
+        }
+        
         return new Path(graph, arcs);
     }
 
@@ -51,12 +91,53 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        
+        // Si il n y a pas de listes de noeuds pour construire le chemin on ne fait rien 
+        if(nodes.size() == 0){
+            return new Path(graph);
+        }
+        // ici si il y a un seul noeud on retourne le chemin avec le seul noeud
+        if ( nodes.size() == 1){
+            return new Path(graph,nodes.get(0));
+        }
+
+        // Listes des arcs pour creer le chemin le moins long
+        List<Arc> arcs = new ArrayList<Arc>(); 
+
+        Node originNode;
+        Node destinationNode;
+
+        Iterator<Node> iterOnNodes= nodes.iterator();
+
+        destinationNode = iterOnNodes.next();
+
+        while( iterOnNodes.hasNext()){
+            originNode = destinationNode;
+            destinationNode = iterOnNodes.next();
+
+            List<Arc> successors = originNode.getSuccessors();
+            Arc shortArc = null; // Plus petit arc
+            float mininumLengthArcValue = Float.MAX_VALUE;
+
+            for (Arc successor : successors) {
+                if((destinationNode.equals(successor.getDestination()) 
+                    && (successor.getLength() < mininumLengthArcValue)
+                    )){
+                        shortArc = successor;
+                        mininumLengthArcValue = successor.getLength();
+                    }
+            }
+
+            if(shortArc == null){
+                throw new IllegalArgumentException();
+            } else{
+                arcs.add(shortArc);
+            }
+        }
+        
         return new Path(graph, arcs);
     }
 
@@ -198,23 +279,35 @@ public class Path {
      * 
      * @return true if the path is valid, false otherwise.
      * 
-     * @deprecated Need to be implemented.
      */
     public boolean isValid() {
-        // TODO:
-        return false;
+        boolean retour = true;
+        if ((!this.isEmpty()) && (!(this.size() == 0))) {
+        	Node debut = this.origin;
+        	for (Arc arc : this.arcs) {
+        		if (debut == arc.getOrigin()) {
+        			debut = arc.getDestination();
+        		} else {
+        			retour = false;
+        			break;
+        		}
+        	}
+        }
+        return retour;
     }
 
     /**
      * Compute the length of this path (in meters).
      * 
      * @return Total length of the path (in meters).
-     * 
-     * @deprecated Need to be implemented.
      */
     public float getLength() {
-        // TODO:
-        return 0;
+        float length = 0;
+        for (Arc arc : this.arcs) {
+            length += arc.getLength();
+        }
+
+        return length;
     }
 
     /**
@@ -225,11 +318,13 @@ public class Path {
      * @return Time (in seconds) required to travel this path at the given speed (in
      *         kilometers-per-hour).
      * 
-     * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        // TODO:
-        return 0;
+        double travelTime = 0;
+        for (Arc arc : arcs) {
+            travelTime+= arc.getTravelTime(speed);
+        }
+        return travelTime;
     }
 
     /**
@@ -238,11 +333,13 @@ public class Path {
      * 
      * @return Minimum travel time to travel this path (in seconds).
      * 
-     * @deprecated Need to be implemented.
      */
     public double getMinimumTravelTime() {
-        // TODO:
-        return 0;
+        double minimumTravelTime = 0;
+        for (Arc arc : arcs) {
+            minimumTravelTime+= arc.getMinimumTravelTime();
+        }
+        return minimumTravelTime;
     }
 
 }
