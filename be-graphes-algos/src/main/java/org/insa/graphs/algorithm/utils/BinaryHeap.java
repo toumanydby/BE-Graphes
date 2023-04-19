@@ -147,8 +147,6 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         if((indexPos != this.currentSize)){
             // On recupere le dernier element du tas
             E lastElement = this.array.get(this.currentSize-1);
-            // On place null a la place du dernier elt qui va disparaitre aussi 
-            this.arraySet(this.currentSize-1, null);
             // On le place a la position de l'element qu'on cherche a supprimer qui est donc supprimer du tas
             this.arraySet(indexPos, lastElement);
             // Reactualise le nombre d'elt du tas

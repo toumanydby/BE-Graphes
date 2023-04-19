@@ -55,7 +55,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while(!(ourTLabels[data.getDestination().getId()].getIsMarqued()) && !(tas.isEmpty())){
 
             // On recupere le sommet le noeud le ayant le plus petit cout sinon on sort du while
-            Node current_node= tas.findMin().getSommetCourant();
+            Node current_node= tas.deleteMin().getSommetCourant();
 
             // On marque ensuite le noeud comme visite et on le notifie
             ourTLabels[current_node.getId()].setIsMarqued(true);
@@ -73,7 +73,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                         &&
                         data.isAllowed(arc)
                     ){
-
                         // On efectue la mise a jour de l'etiquette dans le tas suppression et rajout avec le nouveau cout et le pere
                         try {
                             tas.remove(ourTLabels[successor_desti_node.getId()]);
@@ -106,7 +105,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             // On reorganise les arcs pour qu'ils partent de l'origine a la destination
             Collections.reverse(arcs);
             
-            //Vérification grâce à Path.createShortestPathFromNodes
             Path path_to_take= new Path(graph,arcs);
 
             //Vérification de la validation du path
