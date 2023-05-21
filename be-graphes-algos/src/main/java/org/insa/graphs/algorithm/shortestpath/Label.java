@@ -29,8 +29,8 @@ public class Label implements java.lang.Comparable<Label>{
     public Boolean getIsMarqued() {
         return isMarqued;
     }
-    public double getCoutRealized() {
-        return coutRealized;
+    public double getEstimatedCost() {
+        return 0;
     }
     public Arc getPere() {
         return pere;
@@ -40,6 +40,9 @@ public class Label implements java.lang.Comparable<Label>{
         return coutRealized;
     }
 
+    public double getTotalCost(){
+        return this.getCost()+this.getEstimatedCost();
+    }
 
 
     public void setIsMarqued(Boolean isMarqued) {
@@ -52,7 +55,7 @@ public class Label implements java.lang.Comparable<Label>{
 
     @Override
     public int compareTo(Label toCompare) {
-        return Double.compare(coutRealized, toCompare.getCost());
+        return Double.compare(this.getTotalCost(), toCompare.getTotalCost());
     }
 
 

@@ -46,7 +46,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
         // ON DEROULE L'ALGO DE DJIKSTRA
 
-        // On met le cout de l'origine a 0 et on l'onsere dans le tas
+        // On met le cout de l'origine a 0 et on l'insere dans le tas
         ourTLabels[data.getOrigin().getId()].setCost(0);
         tas.insert(ourTLabels[data.getOrigin().getId()]);
         // On signale avoir traite l'origine

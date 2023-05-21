@@ -41,7 +41,35 @@ public class DjikstraTest {
     // TEST POUR CHEMIN DE LONGUEUR NULLE
     @Test
     public void testSituation1() throws Exception{
-        String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        String mapName = "/media/toumany/disqueDocument/Documents/Graphes-et-Algorithmes/Maps/insa.mapgr";
+
+        //String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        final GraphReader reader = new BinaryGraphReader(
+                new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
+
+        graphs[0] = reader.read();
+        origins[0] = graphs[0].get(30);
+        destinations[0] = graphs[0].get(30);
+        datas[0] = new ShortestPathData(graphs[0], origins[0], destinations[0], arrayFilters[0]);
+
+        DijkstraAlgorithm djikstra = new DijkstraAlgorithm(datas[0]);
+
+        //ShortestPathSolution djikstraPath = djikstra.run();
+        Path djikstraPath = djikstra.run().getPath();
+        double djikstraPathLength = 0;
+        if( djikstraPath != null){
+            djikstraPathLength = djikstraPath.getLength();
+        }
+
+        assertEquals(0,djikstraPathLength,0.00001);
+    }
+
+    // TEST POUR CHEMIN DE LONGUEUR NULLE
+    @Test
+    public void testSituation2() throws Exception{
+        String mapName = "/media/toumany/disqueDocument/Documents/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        
+        //String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
         final GraphReader reader = new BinaryGraphReader(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
 
